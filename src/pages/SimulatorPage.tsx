@@ -303,7 +303,7 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
     oxygenPct: 21.0,
     pressureKpa: 101.3,
     airflowCmS: 8.0,
-    imageSrc: '/planets/planet_biturion.png',
+    imageSrc: '/planets/planet_sedna.png',
     themeColor: '#38bdf8',
     themeGlow: 'rgba(56, 189, 248, 0.75)',
     flameType: 'Zero-G Cryogenic Hull Flame',

@@ -151,7 +151,7 @@ export const PLANETARY_HABITATS: PlanetaryHabitat[] = [
     oxygenPct: 21.0,
     pressureKpa: 101.3,
     airflowCmS: 8.0,
-    imageSrc: '/planets/planet_biturion.png',
+    imageSrc: '/planets/planet_sedna.png',
     themeColor: '#38bdf8',
     flamePhysicsCol1:
       'Extreme heliopause laboratory conditions: zero buoyant convection with thermal ambient backgrounds near -240°C. Cold wall radiant loss causes unique low-temperature cool flame instabilities.',

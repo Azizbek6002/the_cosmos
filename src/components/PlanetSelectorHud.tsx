@@ -149,7 +149,7 @@ const HUD_PLANETS: HudPlanet[] = [
     solarWaveTravelTime: '11h 46m',
     solarFlux: '0.19 W/m²',
     thermalRange: '-240°C to -215°C',
-    imageSrc: '/planets/planet_biturion.png',
+    imageSrc: '/planets/planet_sedna.png',
     themeColor: '#38bdf8',
     themeGlow: 'rgba(56, 189, 248, 0.75)',
     themeGradient: 'from-sky-400 to-cyan-600',
@@ -428,6 +428,8 @@ export const PlanetSelectorHud: React.FC<PlanetSelectorHudProps> = ({
                 <img
                   src={planet.imageSrc}
                   alt={planet.name}
+                  decoding="async"
+                  loading="lazy"
                   className="w-5 h-5 rounded-full object-cover shadow-md"
                 />
                 <span className="font-mono text-[10px] tracking-wider uppercase text-white text-shadow-dark">
@@ -525,6 +527,7 @@ export const PlanetSelectorHud: React.FC<PlanetSelectorHudProps> = ({
               <img
                 src={currentPlanet.imageSrc}
                 alt={currentPlanet.name}
+                decoding="async"
                 className="w-full h-full object-cover rounded-full select-none"
               />
 
