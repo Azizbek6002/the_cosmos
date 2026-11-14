@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShieldAlert, RotateCcw, Sliders } from 'lucide-react';
 import { PageId } from '../components/Header';
 
@@ -65,6 +65,122 @@ interface PlanetSafetyDossier {
 }
 
 const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
+  {
+    id: 'europa',
+    name: 'EUROPA IX // CRYO OUTPOST',
+    subTitle: 'Jovian Icy Moon Sub-Surface Core',
+    gravityG: 0.134,
+    oxygenPct: 19.5,
+    pressureKpa: 95.0,
+    airflowCmS: 5.0,
+    imageSrc: '/planets/planet_europa.png',
+    themeColor: '#2dd4bf',
+    themeGlow: 'rgba(45, 212, 191, 0.7)',
+    flameType: '0.134g Cryo-Dampened Flame',
+    flameGeometrySummary: 'Sub-zero boundary conditions with weak buoyancy. Liquid suppressants freeze instantly.',
+    locThreshold: '12.4%',
+    coHazardPct: 68,
+    burnRateMmS: '0.18',
+    safetyHandbook: [
+      {
+        id: 1,
+        sectionTag: '01 // ARRIVAL SURVIVAL PROTOCOL',
+        title: 'Cryo-Habitat Life-Support & Thermal Stabilization',
+        shortSummary: 'Maintain habitat wall heating; ensure glycol coolant loop integrity at -170°C.',
+        badge: 'MANDATORY ON ARRIVAL',
+        rules: [
+          'Verify heated airlock seal integrity to prevent external ice crystal intrusion.',
+          'Monitor glycol circulation lines for pressure drops or micro-fractures.',
+          'Keep portable heated nitrogen fire packs charged and pre-warmed to +20°C.',
+          'Never deploy aqueous extinguishers near cryogenic hull flanges.'
+        ],
+        criticalDirective: 'Standard water mist freezes instantly in delivery nozzles at -170°C, causing explosive line bursts.'
+      },
+      {
+        id: 2,
+        sectionTag: '02 // FIRE & O2 PREVENTION CONTROLS',
+        title: 'Thermal Shunting & Volatile Glycol Containment',
+        shortSummary: 'Isolate heat exchange loops from high-voltage DC heating power distribution.',
+        badge: 'PREVENTIVE DIRECTIVE',
+        rules: [
+          'Maintain secondary containment around all sub-ice heat exchange circuits.',
+          'Conduct weekly ultrasonic tests on titanium weld joints under thermal stress.',
+          'Limit habitat oxygen concentration strictly below 19.5% LOC margin.',
+          'Ensure avionics wire raceways are purged with inert gaseous nitrogen.'
+        ],
+        criticalDirective: 'Flammable glycol leaks onto hot electrical conductors cause rapid low-temperature smolder.'
+      },
+      {
+        id: 3,
+        sectionTag: '03 // ELECTRICAL BUS OVERHEAT CONTROLS',
+        title: 'High-Amperage Habitat Heating Bus Protection',
+        shortSummary: 'Solid-state circuit isolation for 400A sub-surface thermal power lines.',
+        badge: 'ELECTRICAL HAZARD',
+        rules: [
+          'Install sub-millisecond solid-state arc fault circuit interrupters.',
+          'Route redundant power feeds through separate cryo-insulated conduits.',
+          'Automatic power shedding if heating bus temperature exceeds 65°C.',
+          'Monitor insulation dielectric strength against Jovian magnetic radiation.'
+        ],
+        criticalDirective: 'Thermal contraction micro-fractures in cable insulation generate continuous arc tracking.'
+      },
+      {
+        id: 4,
+        sectionTag: '04 // EMERGENCY FLIGHT & EVACUATION',
+        title: 'Surface Airlock & Ascender Pod Readiness',
+        shortSummary: 'Immediate crew evacuation pathway to surface landing craft in case of hull breach.',
+        badge: 'EVACUATION DIRECTIVE',
+        rules: [
+          'Lock intermediate sub-ice bulkhead hatches within 30 seconds of alarm.',
+          'Verify autonomous ascender pod life support is pressurized and online.',
+          'Don heated planetary survival suits before opening exterior pressure doors.',
+          'Execute nitrogen flood sequence only after crew cabin compartment is hermetically sealed.'
+        ],
+        criticalDirective: 'Ice sublimation around compromised compartments can cause structural collapse of the habitat vault.'
+      }
+    ],
+    hazardCards: [
+      {
+        tag: 'HAZARD 01 // CRYO-COOLANT LEAK',
+        title: 'Glycol Heat Loop Autoignition Risk',
+        image: '/planets/planet_europa.png',
+        description: 'Vaporized glycol coolant under low pressure can ignite when contacting 200°C electronics heat sinks.',
+        countermeasure: 'FIX: Instant scram of glycol pumps; discharge heated nitrogen purge across heat sink.',
+        badge: 'GLYCOL FLASH: 68% HAZARD'
+      },
+      {
+        tag: 'HAZARD 02 // ICE WALL SUBLIMATION',
+        title: 'Thermal Shock to Sub-Surface Ice Bulkhead',
+        image: '/planets/planet_europa.png',
+        description: 'High heat flux from internal flames melts surrounding bedrock ice, threatening habitat seal integrity.',
+        countermeasure: 'FIX: Engage active cryogenic heat pipes to dissipate thermal spike into surrounding ice sink.',
+        badge: 'BULKHEAD CRITICAL: 190°C DELTA'
+      },
+      {
+        tag: 'HAZARD 03 // LINE FREEZE LOCKOUT',
+        title: 'Extinguisher Nozzle Cryo-Freeze',
+        image: '/planets/planet_europa.png',
+        description: 'Moisture in standard fire extinguisher valves freezes instantaneously at -170°C, locking triggers.',
+        countermeasure: 'FIX: Use heated nitrogen cylinders equipped with internal 28V DC PTC warming elements.',
+        badge: 'EXTINGUISHER LOCK: -170°C'
+      }
+    ],
+    suppressionDirective: {
+      agent: 'Heated Gaseous Nitrogen (N2) Flood',
+      protocol: 'Discharge pre-warmed N2 to displace oxygen below 12.4% without inducing thermal shock.',
+      criticalTiming: 'Target: Reach LOC extinction in < 40 seconds to prevent ice sublimation.'
+    },
+    hvacVentilationLock: {
+      rule: 'CRITICAL CRYO HVAC ISOLATION (< 4s)',
+      action: 'Close motorized dampers and engage thermal shunts to contain smoke.',
+      danger: 'Ventilation drafts carry hot gases toward vulnerable ice ceiling anchors.'
+    },
+    postFireClearance: {
+      thermalScan: 'Scan sub-ice structural interface with thermal imager to verify temperatures < -40°C.',
+      gasScrubbing: 'Vent nitrogen cloud through catalytic scrubbers and restore 19.5% O2 breathing mix.',
+      safeReentry: 'Verify bulkhead ice thickness using ground-penetrating radar before unsealing airlocks.'
+    }
+  },
   {
     id: 'cetrion',
     name: 'CETRION // ISS ORBIT',
@@ -775,6 +891,23 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
   const [customOxygen, setCustomOxygen] = useState<number>(21.0);
   const [customPressure, setCustomPressure] = useState<number>(101.3);
   const [customAirflow, setCustomAirflow] = useState<number>(10.0);
+
+  // Auto-sync requested planet from HUD if navigated via launch button
+  useEffect(() => {
+    const requestedPlanetId = sessionStorage.getItem('selected_simulator_planet');
+    if (requestedPlanetId) {
+      sessionStorage.removeItem('selected_simulator_planet');
+      const foundIdx = PLANET_SAFETY_DATABASE.findIndex(p => p.id === requestedPlanetId);
+      if (foundIdx !== -1) {
+        setSelectedPlanetIndex(foundIdx);
+        const p = PLANET_SAFETY_DATABASE[foundIdx];
+        setCustomGravity(p.gravityG);
+        setCustomOxygen(p.oxygenPct);
+        setCustomPressure(p.pressureKpa);
+        setCustomAirflow(p.airflowCmS);
+      }
+    }
+  }, []);
 
   const currentPlanet = PLANET_SAFETY_DATABASE[selectedPlanetIndex];
 
