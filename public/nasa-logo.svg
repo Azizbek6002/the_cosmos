@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 92" width="110" height="92">
+  <defs>
+    <clipPath id="circleClip">
+      <circle cx="55" cy="46" r="44"/>
+    </clipPath>
+  </defs>
+  <!-- Background Circle -->
+  <circle cx="55" cy="46" r="44" fill="#0B3D91"/>
+  <g clip-path="url(#circleClip)">
+    <!-- Stars -->
+    <g fill="#FFFFFF">
+      <circle cx="28" cy="24" r="1"/>
+      <circle cx="36" cy="18" r="0.8"/>
+      <circle cx="44" cy="28" r="0.8"/>
+      <circle cx="70" cy="22" r="1.2"/>
+      <circle cx="78" cy="30" r="0.9"/>
+      <circle cx="85" cy="20" r="0.7"/>
+      <circle cx="22" cy="40" r="1.1"/>
+      <circle cx="34" cy="48" r="0.8"/>
+      <circle cx="76" cy="48" r="0.9"/>
+      <circle cx="88" cy="42" r="1"/>
+      <circle cx="30" cy="65" r="0.8"/>
+      <circle cx="40" cy="72" r="1.2"/>
+      <circle cx="68" cy="68" r="0.7"/>
+      <circle cx="80" cy="62" r="1"/>
+      <circle cx="58" cy="22" r="1"/>
+      <circle cx="52" cy="76" r="0.9"/>
+    </g>
+    <!-- Orbit Ellipse -->
+    <ellipse cx="55" cy="46" rx="48" ry="16" fill="none" stroke="#FFFFFF" stroke-width="2.5" transform="rotate(-30 55 46)"/>
+    <!-- Red Vector Chevron -->
+    <path d="M 12 75 L 55 18 L 68 35 L 55 35 L 42 55 L 75 80 L 68 85 L 35 60 Z" fill="#FC3D21"/>
+    <!-- NASA Text -->
+    <text x="55" y="55" fill="#FFFFFF" font-family="'Helvetica Neue', Arial, sans-serif" font-weight="900" font-size="28" text-anchor="middle" letter-spacing="-1">NASA</text>
+  </g>
+</svg>

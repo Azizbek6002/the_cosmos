@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: #030303;
+  color: #E4E4E7;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  letter-spacing: 0.01em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #030303;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3F3F46;
+}
+
+/* =================================================================== */
+/* TEXT SHADOW UTILITIES (Requested by User)                           */
+/* - White text gets dark/black shadow                                 */
+/* - Dark text gets white shadow                                       */
+/* =================================================================== */
+
+/* For White text: intense dark/black drop shadow for crystal-clear readability */
+.text-shadow-dark {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 1), 0 0 22px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 1);
+}
+
+/* For Dark/Black text: intense luminous white shadow */
+.text-shadow-white {
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.95), 0 0 24px rgba(255, 255, 255, 0.8), 0 1px 4px rgba(255, 255, 255, 1);
+}
+
+.text-shadow-cinematic {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.text-shadow-glow {
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.45), 0 2px 12px rgba(0, 0, 0, 1);
+}
+
+.text-shadow-cyan-halo {
+  text-shadow: 0 0 15px rgba(56, 189, 248, 0.8), 0 2px 10px rgba(0, 0, 0, 1), 0 0 4px rgba(0, 0, 0, 1);
+}
+
+.text-shadow-amber-halo {
+  text-shadow: 0 0 15px rgba(251, 191, 36, 0.8), 0 2px 10px rgba(0, 0, 0, 1), 0 0 4px rgba(0, 0, 0, 1);
+}
+
+.text-shadow-red-halo {
+  text-shadow: 0 0 15px rgba(239, 68, 68, 0.8), 0 2px 10px rgba(0, 0, 0, 1), 0 0 4px rgba(0, 0, 0, 1);
+}
+
+/* Photorealistic 3D Planetary Spheres */
+.planet-photo {
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.planet-photo:hover {
+  transform: scale(1.035);
+}
+
+/* Earth / Cetrion Atmospheric Lighting */
+.planet-cetrion {
+  background-image: url('/planets/planet_earth.png');
+  box-shadow: 
+    0 0 50px rgba(56, 189, 248, 0.35),
+    inset -35px -35px 70px rgba(0, 0, 0, 0.95),
+    inset 8px 8px 16px rgba(224, 242, 254, 0.35);
+}
+.planet-cetrion:hover {
+  box-shadow: 
+    0 0 80px rgba(56, 189, 248, 0.55),
+    inset -35px -35px 70px rgba(0, 0, 0, 0.95);
+}
+
+/* Mars / Devlaar Atmospheric Lighting */
+.planet-devlaar {
+  background-image: url('/planets/planet_mars.png');
+  box-shadow: 
+    0 0 55px rgba(249, 115, 22, 0.35),
+    inset -40px -40px 75px rgba(0, 0, 0, 0.95),
+    inset 10px 10px 18px rgba(254, 215, 170, 0.3);
+}
+.planet-devlaar:hover {
+  box-shadow: 
+    0 0 85px rgba(249, 115, 22, 0.55),
+    inset -40px -40px 75px rgba(0, 0, 0, 0.95);
+}
+
+/* Moon / Ceres / Biturion Extraterrestrial Lighting */
+.planet-biturion {
+  background-image: url('/planets/planet_biturion.png');
+  box-shadow: 
+    0 0 50px rgba(212, 212, 216, 0.3),
+    inset -38px -38px 70px rgba(0, 0, 0, 0.95),
+    inset 8px 8px 18px rgba(255, 255, 255, 0.35);
+}
+.planet-biturion:hover {
+  box-shadow: 
+    0 0 80px rgba(244, 244, 245, 0.5),
+    inset -38px -38px 70px rgba(0, 0, 0, 0.95);
+}
