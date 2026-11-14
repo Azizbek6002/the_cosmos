@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
-import { ShieldAlert, Flame, AlertTriangle, Cpu, RotateCcw, Sliders } from 'lucide-react';
+import { ShieldAlert, RotateCcw, Sliders } from 'lucide-react';
 import { PageId } from '../components/Header';
 
 interface SimulatorPageProps {
   onNavigate: (page: PageId) => void;
+}
+
+interface SafetyGuideSection {
+  id: number;
+  sectionTag: string;
+  title: string;
+  shortSummary: string;
+  badge: string;
+  rules: string[];
+  criticalDirective: string;
 }
 
 interface HabitatHazardItem {
@@ -32,13 +42,11 @@ interface PlanetSafetyDossier {
   locThreshold: string;
   coHazardPct: number;
   burnRateMmS: string;
-  // Left 4 Cards: Human Safety & Flame Behavior
-  crewSurvivalActions: string[];
-  flameCombustionMechanism: string[];
-  toxicGasAndCoThreat: string[];
-  criticalMaterialHazards: string[];
+  // Left 4 Cards: Interactive Step-by-Step Survival & Fire Prevention Handbook
+  safetyHandbook: SafetyGuideSection[];
   // Right 3 Cards: Specific Problem Photos & Directives
   hazardCards: HabitatHazardItem[];
+  // Telemetry details
   suppressionDirective: {
     agent: string;
     protocol: string;
@@ -73,26 +81,63 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
     locThreshold: '13.0%',
     coHazardPct: 95,
     burnRateMmS: '0.22',
-    crewSurvivalActions: [
-      'Don emergency breathing hood immediately; do not rely on ceiling smoke detectors.',
-      'Seal inter-module pressure hatches to prevent cabin-wide smoke migration.',
-      'Prepare emergency Soyuz / Crew Dragon evacuation vehicle if toxic CO exceeds 50 ppm.',
-      'Communicate emergency vector to Houston / TsUP mission control.'
-    ],
-    flameCombustionMechanism: [
-      'Natural convection is 0; hot air does not rise. Flame burns as a spherical blue halo.',
-      'Oxygen replenishment relies entirely on forced HVAC draft or molecular diffusion.',
-      'If airflow is stopped, flame consumes boundary oxygen and self-extinguishes.'
-    ],
-    toxicGasAndCoThreat: [
-      'NASA FLEX Discovery: Invisible "Cool Flames" persist at 500–750 K without visible glow.',
-      'Incomplete oxidation generates massive concentrations of deadly Carbon Monoxide (CO).',
-      'Chain-like soot aggregates remain suspended in zero-g indefinitely, blinding optical sensors.'
-    ],
-    criticalMaterialHazards: [
-      'PMMA (Plexiglas): Viewing port polymer melts and droplets detach into cabin airflow.',
-      'Nomex Flight Suits: Extinguishes in stagnant air, but sustains smolder if ventilation > 15 cm/s.',
-      'Electrical Harnesses: Fluoropolymer insulation outgasses toxic hydrogen fluoride gas.'
+    safetyHandbook: [
+      {
+        id: 1,
+        sectionTag: '01 // ARRIVAL SURVIVAL PROTOCOL',
+        title: 'Zero-G Cabin Life-Support & Acclimatization',
+        shortSummary: 'Cabin pressure 101.3 kPa; natural draft is 0; do not rely on ceiling smoke sensors.',
+        badge: 'MANDATORY ON ARRIVAL',
+        rules: [
+          'Don emergency breathing hood within 10 seconds of master caution alarm.',
+          'Move away from ventilation returns; in zero-g, smoke drifts with forced drafts.',
+          'Verify airlock hatch seal integrity to isolate affected modules from living quarters.',
+          'Pre-arm emergency crew return vehicle (Soyuz / Crew Dragon) if CO level breaches 50 ppm.'
+        ],
+        criticalDirective: 'Natural buoyant convection is zero; hot air and toxic gases will not rise to ceiling detectors.'
+      },
+      {
+        id: 2,
+        sectionTag: '02 // FIRE & O2 PREVENTION CONTROLS',
+        title: 'Atmospheric Limiting & Volatiles Management',
+        shortSummary: 'Maintain oxygen partial pressure ≤ 21.0 kPa; strict controls on acrylic and PMMA viewports.',
+        badge: 'PREVENTIVE DIRECTIVE',
+        rules: [
+          'Prohibit unsealed polymers with limiting oxygen index < 25 near electronics racks.',
+          'Conduct daily infrared leak inspections on high-pressure O2 candle generation manifolds.',
+          'Install flame-retardant silicone sleeves on all umbilical wire harnesses.',
+          'Never permit forced air draft velocity > 12 cm/s through equipment bays.'
+        ],
+        criticalDirective: 'Stagnant microgravity air self-extinguishes; fan drafts feed oxygen directly to the reaction.'
+      },
+      {
+        id: 3,
+        sectionTag: '03 // ELECTRICAL BUS OVERHEAT CONTROLS',
+        title: '120V DC Avionics Bus & Thermal Runaway Shields',
+        shortSummary: 'Thermal heat sink monitoring and hermetic Li-Ion battery containment.',
+        badge: 'ELECTRICAL HAZARD',
+        rules: [
+          'Automatic circuit breaker disconnect if power draw spikes by > 8% above baseline.',
+          'Enclose Li-Ion battery racks in sealed hermetic titanium containment boxes.',
+          'Verify cold plate thermal heat-sink temperature is maintained at < 18°C.',
+          'Maintain 360° infrared thermal scanning for invisible NASA FLEX cool flames.'
+        ],
+        criticalDirective: 'Cool flames persist invisibly at 500–750 K without visible glow while silently accumulating toxic CO.'
+      },
+      {
+        id: 4,
+        sectionTag: '04 // EMERGENCY SUPPRESSION ACTIONS',
+        title: 'Automated Rapid Extinguishing Sequence',
+        shortSummary: 'Immediate HVAC shutdown (<5s) and total-flood portable CO2 discharge.',
+        badge: 'IMMEDIATE ACTION',
+        rules: [
+          'STEP 1: Execute immediate automated HVAC fan cut-off within 5 seconds.',
+          'STEP 2: Discharge portable CO2 extinguisher directly at the spherical flame envelope.',
+          'STEP 3: Maintain CO2 blanket for 15 minutes to starve invisible cool flame embers.',
+          'STEP 4: Run catalytic CO oxidizers and active charcoal filters for 4 hours.'
+        ],
+        criticalDirective: 'Water mist is strictly prohibited: boiling droplets rupture composite avionics circuits.'
+      }
     ],
     hazardCards: [
       {
@@ -152,26 +197,63 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
     locThreshold: '14.2%',
     coHazardPct: 78,
     burnRateMmS: '0.45',
-    crewSurvivalActions: [
-      'EVACUATE FLOOR LEVELS: In 0.38g, toxic heavy gases do not rise; they pool along cabin floors!',
-      'Don closed-circuit oxygen masks; move to elevated bunks or airlock shelters.',
-      'Seal the affected habitat sector and verify positive pressure in crew living quarters.',
-      'Arm automated Mars rover evacuation tether in case of habitat hull depressurization.'
-    ],
-    flameCombustionMechanism: [
-      'Buoyant convection is 38% of Earth standard; flame forms a flattened spreading dome.',
-      'Low habitat pressure (56 kPa with 28% O2) lowers polymer ignition energy thresholds.',
-      'Flame spread across horizontal cable runs is 2.4x faster than in 1g terrestrial tests.'
-    ],
-    toxicGasAndCoThreat: [
-      'Smoke and carbon monoxide migrate laterally across crew walking surfaces.',
-      'Ceiling smoke detectors trigger with severe delays because buoyant plume velocity is weak.',
-      'Regolith iron-oxide dust catalytic interactions accelerate polymer degradation into toxic volatiles.'
-    ],
-    criticalMaterialHazards: [
-      'Crosslinked Polyethylene Cables: Dripping burning mass accelerates horizontal fire spread.',
-      'Rover Li-Ion Batteries: Thermal runaway releases dense, unvented hydrogen and HF gases.',
-      'Habitat Composite Shell: Low-pressure outgassing creates flammable gaseous pockets.'
+    safetyHandbook: [
+      {
+        id: 1,
+        sectionTag: '01 // ARRIVAL SURVIVAL PROTOCOL',
+        title: 'Partial-Gravity Plume Dynamics & Acclimatization',
+        shortSummary: 'Sub-atmospheric 56 kPa pressure; toxic heavy gases pool along crew floor surfaces.',
+        badge: 'MANDATORY ON ARRIVAL',
+        rules: [
+          'EVACUATE FLOOR LEVELS IMMEDIATELY: toxic CO and HCN settle at floor height.',
+          'Climb to elevated bunk platforms or second-tier command mezzanine.',
+          'Engage closed-circuit positive-pressure astronaut rebreathers.',
+          'Arm automated surface rover evacuation umbilical in case of hull depressurization.'
+        ],
+        criticalDirective: 'In 0.38g buoyancy, smoke does not rise rapidly; floor level is the primary fatality zone.'
+      },
+      {
+        id: 2,
+        sectionTag: '02 // REGOLITH CATALYSIS CONTROLS',
+        title: 'Iron-Oxide Regolith Dust Decontamination',
+        shortSummary: 'Abrasive Martian regolith acts as an aggressive oxidation catalyst.',
+        badge: 'DUST ISOLATION',
+        rules: [
+          'Decontaminate EVA suits in negative-pressure airlock before habitat ingress.',
+          'Abrasive Fe2O3 dust accelerates polymer combustion by 240% if airborne.',
+          'Maintain habitat humidity between 40-50% to prevent static spark buildup.',
+          'Store extravehicular oxygen bottles in external underground regolith bunkers.'
+        ],
+        criticalDirective: 'Dust contamination on electrical relays triggers spontaneous arc ignition.'
+      },
+      {
+        id: 3,
+        sectionTag: '03 // LOW-PRESSURE VOLATILES SAFETY',
+        title: 'Sub-Atmospheric 56 kPa Ignition Mitigation',
+        shortSummary: '56 kPa pressure with 28% O2 lowers Limiting Oxygen Concentration (LOC).',
+        badge: 'PRESSURE CONTROL',
+        rules: [
+          'Crosslinked polyethylene cables must be isolated inside sealed conduit channels.',
+          'Rover battery recharge bays must be vented directly to external Martian ambient.',
+          'Monitor outgassing volatiles with gas-chromatograph sensors every 12 hours.',
+          'Prohibit open solder stations during high-solar-flux dust storm periods.'
+        ],
+        criticalDirective: 'Low atmospheric pressure increases plasticizer evaporation and flammability.'
+      },
+      {
+        id: 4,
+        sectionTag: '04 // EMERGENCY SUPPRESSION ACTIONS',
+        title: 'Floor-Plume Quench & Total Flood',
+        shortSummary: 'Deploy total-flood CO2 and processed dry regolith smothering blanket.',
+        badge: 'IMMEDIATE ACTION',
+        rules: [
+          'STEP 1: Cease crew habitat air circulation to halt lateral floor plume spread.',
+          'STEP 2: Deliver clean CO2 agent or fine water mist within 45 seconds.',
+          'STEP 3: Dump burning rover battery locker atmosphere to exterior Martian vacuum.',
+          'STEP 4: Scan sub-floor cable trays with FLIR thermal camera for hidden hot-spots.'
+        ],
+        criticalDirective: 'Extinguish floor-level plume before toxic gases reach life-support intakes.'
+      }
     ],
     hazardCards: [
       {
@@ -232,26 +314,63 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
     locThreshold: '13.8%',
     coHazardPct: 82,
     burnRateMmS: '0.28',
-    crewSurvivalActions: [
-      'Lock EVA suit visors immediately; prepare for emergency transfer to Lunar Lander ascent stage.',
-      'Evacuate to sub-regolith shielded habitat bunker; isolate surface modules.',
-      'Verify Lunar regolith airlock seal integrity to prevent abrasive dust from entering oxygen regulators.',
-      'Cut high-voltage DC bus to lunar solar array battery converter.'
-    ],
-    flameCombustionMechanism: [
-      '1/6th gravity creates an intermediate regime between spherical diffusion and buoyancy.',
-      'Boundary layer thickens dramatically, allowing unseen smoldering inside avionics bays.',
-      'Flames propagate silently across porous multi-layer thermal insulation (MLI).'
-    ],
-    toxicGasAndCoThreat: [
-      'Smoldering combustion yields dense carbon monoxide and hazardous hydrocarbon tars.',
-      'Sub-atmospheric pressure (56.5 kPa) accelerates plasticizer evaporation.',
-      'Regolith abrasive dust damages fire detector mirrors, causing blind detection zones.'
-    ],
-    criticalMaterialHazards: [
-      'EVA Suit Fabrics: Multi-layer insulation (MLI) traps internal smoldering pockets.',
-      'Avionics PTFE Wiring: Pyrolyzes at 300°C, releasing corrosive hydrofluoric acid vapor.',
-      'Solar Array DC Harnesses: High-voltage DC arcing triggers persistent plasma burns.'
+    safetyHandbook: [
+      {
+        id: 1,
+        sectionTag: '01 // ARRIVAL SURVIVAL PROTOCOL',
+        title: 'Lunar Surface Arrival & Vacuum Airlock Safety',
+        shortSummary: '0.166g gravity; airlock regolith barrier and MLI insulation check.',
+        badge: 'MANDATORY ON ARRIVAL',
+        rules: [
+          'Lock EVA suit visors; prepare emergency transfer to Lunar Ascent Module.',
+          'Retreat to subterranean sub-regolith shielded habitat shelter.',
+          'Verify lunar dust airlock seals to prevent razor-sharp particulates from entering.',
+          'Cut main 270V DC solar array bus converter if arcing is observed.'
+        ],
+        criticalDirective: 'Intermediate 1/6g gravity creates thick, silent smoldering boundary layers.'
+      },
+      {
+        id: 2,
+        sectionTag: '02 // REGOLITH EROSION MITIGATION',
+        title: 'Oxygen Valve Seal & Ingress Protection',
+        shortSummary: 'Stop abrasive dust from penetrating high-pressure oxygen manifolds.',
+        badge: 'PREVENTIVE DIRECTIVE',
+        rules: [
+          'Inspect regolith-tight seals on all oxygen feed lines before re-pressurization.',
+          'Keep multi-layer insulation (MLI) blankets under vacuum compression.',
+          'Prevent ungrounded composite surfaces from accumulating electrostatic charges.',
+          'Prohibit open PTFE fluoropolymer wiring in unventilated avionics bays.'
+        ],
+        criticalDirective: 'Regolith particles erode valve seats, creating invisible high-pressure O2 micro-jets.'
+      },
+      {
+        id: 3,
+        sectionTag: '03 // DC ARCING & THERMAL SHOCK',
+        title: 'Solar Array Bus Bar Arc-Fault Protection',
+        shortSummary: 'Extreme thermal swings (-130°C to +120°C) crack cable insulation.',
+        badge: 'ELECTRICAL HAZARD',
+        rules: [
+          'Monitor solar array bus bar resistance for thermal fatigue cracking.',
+          'Engage arc-fault circuit interrupters (AFCI) on all primary DC feeders.',
+          'Isolate sub-surface battery storage vault during lunar noon peak heating.',
+          'Purge avionics bays with surface nitrogen gas storage.'
+        ],
+        criticalDirective: 'High-voltage vacuum arcing sustains persistent plasma torches if unswitched.'
+      },
+      {
+        id: 4,
+        sectionTag: '04 // EMERGENCY SUPPRESSION ACTIONS',
+        title: 'In-Situ Lunar Regolith Smothering Blanket',
+        shortSummary: 'In-situ degassed lunar regolith powder smothering + nitrogen purge.',
+        badge: 'IMMEDIATE ACTION',
+        rules: [
+          'STEP 1: Disperse micronized lunar regolith powder directly over burning equipment.',
+          'STEP 2: Regolith acts as a massive thermal heat sink, absorbing runaway heat.',
+          'STEP 3: Purge avionics compartment with inert dry nitrogen gas within 60 seconds.',
+          'STEP 4: Radiometric confirmation that core equipment temperature is < 50°C.'
+        ],
+        criticalDirective: 'Do not use water: boiling steam creates instantaneous cabin overpressure.'
+      }
     ],
     hazardCards: [
       {
@@ -311,26 +430,63 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
     locThreshold: '11.5%',
     coHazardPct: 95,
     burnRateMmS: '0.12',
-    crewSurvivalActions: [
-      'EVACUATE IMMEDIATELY to Central Centrifuge Habitat Hub; lock pressure bulkhead doors.',
-      'Don closed-circuit emergency life support rebreathers (resupply is impossible at 85 AU).',
-      'Authorize emergency automated venting of affected science wing to space vacuum.',
-      'Isolate cryogenic sleep tanks from main electrical and environmental loops.'
-    ],
-    flameCombustionMechanism: [
-      'Zero convection with cold hull radiation loss near -240°C triggers cool flame instabilities.',
-      'Flames burn with zero soot luminosity (completely invisible blue or infrared emission).',
-      'Combustion products expand spherically, pressurizing unvented storage lockers.'
-    ],
-    toxicGasAndCoThreat: [
-      'Deadly Carbon Monoxide buildup (95% index); cool flames continue burning invisibly.',
-      'Zero-g suspended soot clogs environmental life-support scrubbers within 120 seconds.',
-      'Water mist extinguishment is prohibited: boiling droplets rupture composite electronics.'
-    ],
-    criticalMaterialHazards: [
-      '3D Printing Polymers (PEEK, Ultem): Pyrolyze into volatile aromatic hydrocarbons.',
-      'Laboratory Aerosol Reagents: Flash ignition creates expanding supersonic pressure waves.',
-      'Radiant Water Wall Baffles: Overpressure steam hazards near heating conduits.'
+    safetyHandbook: [
+      {
+        id: 1,
+        sectionTag: '01 // ARRIVAL SURVIVAL PROTOCOL',
+        title: 'Heliopause Station Arrival & Centrifuge Life Hub',
+        shortSummary: 'Zero resupply possible at 85 AU; 30 Kelvin exterior vacuum; immediate module lockdown.',
+        badge: 'MANDATORY ON ARRIVAL',
+        rules: [
+          'EVACUATE TO CENTRAL CENTRIFUGE: Seal airtight bulkheads to preserve core life.',
+          'Don self-contained cryogenic life-support rebreather apparatus.',
+          'Verify outer composite hull integrity against thermal fracture shock.',
+          'Prepare emergency orbital escape module in case of life-hub depressurization.'
+        ],
+        criticalDirective: 'Resupply is 85 AU away; module preservation takes precedence.'
+      },
+      {
+        id: 2,
+        sectionTag: '02 // CRYO-HULL FIRE PREVENTION',
+        title: 'Polymer Storage & Laboratory Reagents',
+        shortSummary: 'Radiant heat loss into deep-space cold causes unique cool flame traps.',
+        badge: 'PREVENTIVE DIRECTIVE',
+        rules: [
+          'Store 3D printing PEEK and Ultem resins in vacuum-isolated storage bins.',
+          'Prohibit liquid aerosol reagents in unventilated microgravity gloveboxes.',
+          'Maintain radiant water-wall thermal baffles at steady 12°C.',
+          'Perform ultrasonic structural scans of cryogenic composite joints weekly.'
+        ],
+        criticalDirective: 'At -240°C ambient, localized fires create immense catastrophic hull stresses.'
+      },
+      {
+        id: 3,
+        sectionTag: '03 // RADIATION & DIELECTRIC SAFETY',
+        title: 'Cosmic Ray Flux & High-Voltage Bus Protection',
+        shortSummary: 'Extreme space particle flux degrades wiring insulation into flammable gas.',
+        badge: 'RADIATION HAZARD',
+        rules: [
+          'Shield high-voltage avionics with heavy boron-doped polyethylene matrices.',
+          'Monitor dielectric breakdown voltage on all deep-space ion thruster buses.',
+          'Isolate cryogenic sleep tanks from main electrical power conduits.',
+          'Inspect secondary backup oxygen scrubbers before each shift.'
+        ],
+        criticalDirective: 'Radiation-damaged polymers outgas flammable hydrocarbons at room temperature.'
+      },
+      {
+        id: 4,
+        sectionTag: '04 // EMERGENCY SUPPRESSION ACTIONS',
+        title: 'Automated Module Vacuum Venting Barrier',
+        shortSummary: 'Automated pyrotechnic hull venting to space vacuum within 20 seconds.',
+        badge: 'IMMEDIATE ACTION',
+        rules: [
+          'STEP 1: Trigger pyrotechnic slam-valves to physically sever lab ductwork.',
+          'STEP 2: Blow explosive hull vent to dump lab atmosphere directly to space vacuum.',
+          'STEP 3: Vacuum exposure terminates all combustion within 4 seconds.',
+          'STEP 4: Radiometric scan confirms hull boundary has frozen back to 30 Kelvin.'
+        ],
+        criticalDirective: 'Do not attempt chemical filtration; space vacuum is the ultimate zero-loss extinguisher.'
+      }
     ],
     hazardCards: [
       {
@@ -390,26 +546,63 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
     locThreshold: '10.8%',
     coHazardPct: 74,
     burnRateMmS: '0.15',
-    crewSurvivalActions: [
-      'PREVENT HULL RUPTURE AT ALL COSTS: External methane ingress into internal O2 creates detonation!',
-      'Don fireproof rebreathers; verify airlock positive nitrogen overpressure barrier is active.',
-      'Evacuate to sub-ice emergency shelter if airlock pressure differential drops below 10 kPa.',
-      'Verify methane detector sensors around perimeter gaskets.'
-    ],
-    flameCombustionMechanism: [
-      'Dense atmosphere (147 kPa) provides high heat sinking, but increases gas phase reaction rates.',
-      'Flames propagate along internal polymer surfaces with enhanced thermal conductivity.',
-      'Extreme danger of dual-reactant boundary layer: an airlock leak acts as an industrial torch.'
-    ],
-    toxicGasAndCoThreat: [
-      'Dense unburned hydrocarbon soot, polycyclic aromatic compounds, and carbon monoxide.',
-      'Electrostatic spark discharges from cryogenic methane blizzards ignite venting oxygen.',
-      'External seals face rapid thermal degradation, risking structural failure.'
-    ],
-    criticalMaterialHazards: [
-      'Airlock Fluoroelastomer Gaskets: Hydrocarbon swelling makes rubber brittle and flammable.',
-      'Electrolysis Units: Cryogenic methane ingress into oxygen separation manifolds.',
-      'Aerostat Envelopes: Electrostatic charging during methane rainstorms triggers ignition.'
+    safetyHandbook: [
+      {
+        id: 1,
+        sectionTag: '01 // ARRIVAL SURVIVAL PROTOCOL',
+        title: 'Dual-Atmosphere Boundary & Methane Alert',
+        shortSummary: 'External dense methane (1.5 atm) vs internal oxygen; hull breach = explosion.',
+        badge: 'MANDATORY ON ARRIVAL',
+        rules: [
+          'PREVENT HULL RUPTURE AT ALL COSTS: Methane ingress creates immediate detonation.',
+          'Don fireproof positive-pressure rebreathers; retreat to sub-ice bunker.',
+          'Verify positive nitrogen overpressure barrier is active across all airlocks.',
+          'Check perimeter methane sensors for any exterior gas penetration.'
+        ],
+        criticalDirective: 'An internal fire that punctures the hull acts as a continuous fuel-air torch.'
+      },
+      {
+        id: 2,
+        sectionTag: '02 // METHANE & OXYGEN SEPARATION',
+        title: 'Positive Nitrogen Curtain & Seal Integrity',
+        shortSummary: 'Maintain internal habitat pressure higher than external 147 kPa at all times.',
+        badge: 'PREVENTIVE DIRECTIVE',
+        rules: [
+          'Maintain internal habitat pressure higher than external 147 kPa at all times.',
+          'Flush airlocks with pure nitrogen before opening external or internal doors.',
+          'Prohibit any open electrical contacts within 10 meters of airlock vestibules.',
+          'Inspect cryogenic heat exchanger core for methane-ice clogging every shift.'
+        ],
+        criticalDirective: 'Any pressure drop draws in atmospheric methane, creating explosive stoichiometry.'
+      },
+      {
+        id: 3,
+        sectionTag: '03 // CRYOGENIC EMBRITTLEMENT SAFETY',
+        title: 'Extreme -179°C Gasket Heating & Seals',
+        shortSummary: '-179°C exterior temperatures shatter rubber and fluoroelastomer seals.',
+        badge: 'THERMAL SHOCK HAZARD',
+        rules: [
+          'Engage active heating coils along all perimeter airlock gasket frames.',
+          'Replace fluoroelastomers showing signs of cryogenic hydrocarbon swelling.',
+          'Isolate oxygen electrolysis manifolds from external atmospheric intakes.',
+          'Inspect structural weld seams with acoustic emission sensors daily.'
+        ],
+        criticalDirective: 'Localized fire heat contrasting with -179°C cold causes explosive thermal shock.'
+      },
+      {
+        id: 4,
+        sectionTag: '04 // EMERGENCY SUPPRESSION ACTIONS',
+        title: 'High-Pressure Pure Nitrogen Blanket Injection',
+        shortSummary: 'High-pressure pure nitrogen blanket injection within 15 seconds.',
+        badge: 'IMMEDIATE ACTION',
+        rules: [
+          'STEP 1: Trigger external intake slam dampers; cut all atmospheric draws.',
+          'STEP 2: Inject high-pressure nitrogen gas to dilute oxygen below 10.8% LOC.',
+          'STEP 3: Maintain nitrogen overpressure to keep external methane from penetrating.',
+          'STEP 4: Run mass spectrometer gas analysis to confirm zero hydrocarbon ppm.'
+        ],
+        criticalDirective: 'Never vent to exterior Titan atmosphere; that draws in fuel!'
+      }
     ],
     hazardCards: [
       {
@@ -470,26 +663,63 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
     locThreshold: '16.0%',
     coHazardPct: 45,
     burnRateMmS: '1.40',
-    crewSurvivalActions: [
-      'EVACUATE CEILING PROXIMITY IMMEDIATELY: Superheated plumes shoot upward at 4x terrestrial speed!',
-      'Crawl along floor levels while fighting against 2.53g body weight to reach armored escape pod.',
-      'Activate emergency radiation shield bulkhead to contain superheated plasma arcs.',
-      'Don reinforced thermal protective fire hoods.'
-    ],
-    flameCombustionMechanism: [
-      'Rayleigh-Bénard thermal convection is magnified by 2.5x; intense upward chimney draft.',
-      'Flames form tight, violently flickering turbulent jets with extreme convective heat release.',
-      'Molten polymer droplets tear loose and rain rapidly downward under heavy gravity.'
-    ],
-    toxicGasAndCoThreat: [
-      'Superheated combustion plumes reach ceiling panels within 1.2 seconds.',
-      'Flashover temperature (600°C) is reached 3 times faster than in Earth standard tests.',
-      'Intense Jovian magnetosphere radiation accelerates dielectric breakdown of damaged wiring.'
-    ],
-    criticalMaterialHazards: [
-      'Ceiling Wire Trays: Direct plume impingement triggers catastrophic structural wire fire.',
-      'Superconducting Magnet Cryo-Loops: Quench arcing vaporizes insulation into flame jets.',
-      'High-Pressure Hydraulic Actuators: Plume heat ruptures fluid lines at 200 bar pressure.'
+    safetyHandbook: [
+      {
+        id: 1,
+        sectionTag: '01 // ARRIVAL SURVIVAL PROTOCOL',
+        title: 'Hyper-Gravity Acclimatization & Ceiling Hazard',
+        shortSummary: '2.53g gravity makes movement heavy; superheated plumes rise at 4x speed.',
+        badge: 'MANDATORY ON ARRIVAL',
+        rules: [
+          'EVACUATE CEILING IMMEDIATELY: Hot plumes shoot upward to ceiling in < 1.2s.',
+          'Crawl along floor against 2.53g heavy body weight to reach armored pod.',
+          'Activate emergency radiation shield bulkhead to block plasma arcs.',
+          'Don reinforced thermal fire hoods against intense convective flashover.'
+        ],
+        criticalDirective: 'Ceiling flashover (600°C) is reached 3x faster than on Earth.'
+      },
+      {
+        id: 2,
+        sectionTag: '02 // LIGHTNING & HYPERBARIC CONTROLS',
+        title: 'Faraday Shielding & Pressure Isolation',
+        shortSummary: 'Atmospheric mega-volt lightning strikes and hyperbaric pressure shear.',
+        badge: 'PREVENTIVE DIRECTIVE',
+        rules: [
+          'Engage active Faraday magnetic deflection shield around aerostat hull.',
+          'Maintain hyperbaric structural seals against turbulent Jovian convective shear.',
+          'Inspect high-pressure hydraulic lines (200 bar) for thermal stress micro-cracks.',
+          'Cut power to superconducting magnet coils if temperature rises above 4 Kelvin.'
+        ],
+        criticalDirective: 'Violent buoyant updrafts turn minor smolders into high-velocity fire jets.'
+      },
+      {
+        id: 3,
+        sectionTag: '03 // AEROSTAT BUOYANCY SAFEGUARDS',
+        title: 'Hot-Gas Buoyant Envelope Integrity',
+        shortSummary: 'Thermal radiation melting hot-gas cells causes catastrophic descent.',
+        badge: 'BUOYANCY HAZARD',
+        rules: [
+          'Monitor buoyant gas envelope temperature across 360-degree sensor grid.',
+          'Isolate high-voltage avionics trays from buoyant envelope suspension cables.',
+          'Pre-arm emergency ascent solid-fuel escape boosters for immediate launch.',
+          'Verify automatic ballast dump valves are calibrated for 2.53g.'
+        ],
+        criticalDirective: 'A fire in the buoyant envelope causes irreversible descent into Jupiter core.'
+      },
+      {
+        id: 4,
+        sectionTag: '04 // EMERGENCY SUPPRESSION ACTIONS',
+        title: 'High-Pressure Argon Deluge + Active Water Curtain',
+        shortSummary: 'High-pressure argon deluge + active water curtain within 10 seconds.',
+        badge: 'IMMEDIATE ACTION',
+        rules: [
+          'STEP 1: Discharge dense gaseous argon deluge from ceiling-mounted nozzles.',
+          'STEP 2: Activate active water curtain to cool ceiling trusses and break chimney draft.',
+          'STEP 3: Cut main electrical bus to quench superconducting magnet arcing.',
+          'STEP 4: Verify superconducting magnet temperature remains below quench limits.'
+        ],
+        criticalDirective: 'Discharge must occur in < 10 seconds to stop convective flashover propagation.'
+      }
     ],
     hazardCards: [
       {
@@ -536,7 +766,8 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
 ];
 
 export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNavigate }) => {
-  const [selectedPlanetIndex, setSelectedPlanetIndex] = useState<number>(0); // Default to Cetrion / ISS
+  const [selectedPlanetIndex, setSelectedPlanetIndex] = useState<number>(0);
+  const [isTransitioningPlanet, setIsTransitioningPlanet] = useState<boolean>(false);
   const [showCustomSliders, setShowCustomSliders] = useState<boolean>(false);
 
   // Custom simulator sliders state
@@ -547,14 +778,20 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
 
   const currentPlanet = PLANET_SAFETY_DATABASE[selectedPlanetIndex];
 
-  // Sync custom sliders when planet changes
+  // Smooth transfer animation when selecting a planet from the top lineup
   const selectPlanet = (index: number) => {
+    if (index === selectedPlanetIndex) return;
+    setIsTransitioningPlanet(true);
     setSelectedPlanetIndex(index);
     const p = PLANET_SAFETY_DATABASE[index];
     setCustomGravity(p.gravityG);
     setCustomOxygen(p.oxygenPct);
     setCustomPressure(p.pressureKpa);
     setCustomAirflow(p.airflowCmS);
+
+    setTimeout(() => {
+      setIsTransitioningPlanet(false);
+    }, 650);
   };
 
   return (
@@ -563,7 +800,7 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
 
         {/* =================================================================== */}
         {/* 1. TOP HERO: PLANETARY SELECTION LINEUP (1:1 with Reference Image 1)*/}
-        {/* Wide, open, completely unconstrained floating celestial bodies (NO FRAME)*/}
+        {/* Completely open, unconstrained, floating celestial bodies (NO FRAME)*/}
         {/* =================================================================== */}
         <div className="relative py-6">
           {/* Subtle starry background grid */}
@@ -613,7 +850,7 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
                     {/* Selected Planet HUD Orbit Rings (Centered with Pinpoint Mathematical Precision) */}
                     {isSelected && (
                       <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                        {/* 1. Outer Solid Crisp White Orbit Ring (Perfect Circle, Centered on Sphere) */}
+                        {/* 1. Outer Solid Crisp White Orbit Ring */}
                         <div
                           className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-full border border-white/60 pointer-events-none transition-all duration-500 shadow-[0_0_12px_rgba(255,255,255,0.25)]"
                           style={{
@@ -621,7 +858,7 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
                           }}
                         />
 
-                        {/* 2. Inner Dashed Technical Reticle White Orbit Ring (Slow, Smooth Rotation, Perfect Circle) */}
+                        {/* 2. Inner Dashed Technical Reticle White Orbit Ring */}
                         <div
                           className="absolute w-[86px] h-[86px] sm:w-[102px] sm:h-[102px] rounded-full border border-dashed border-white/75 animate-[spin_35s_linear_infinite] pointer-events-none"
                         />
@@ -648,6 +885,7 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
                       <img
                         src={planet.imageSrc}
                         alt={planet.name}
+                        decoding="async"
                         className="w-full h-full object-cover rounded-full select-none"
                       />
                       <div
@@ -659,7 +897,7 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
                     </div>
                   </div>
 
-                  {/* Planet Label (Positioned cleanly below orbit rings with comfortable margin) */}
+                  {/* Planet Label */}
                   <span
                     className={`font-mono text-[9px] uppercase tracking-wider mt-4 transition-colors text-shadow-dark ${
                       isSelected ? 'text-white font-medium' : 'text-zinc-400 group-hover:text-white'
@@ -678,168 +916,163 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
         </div>
 
         {/* =================================================================== */}
-        {/* 2. THE TACTICAL SAFETY & FIRE HUD TABLE (1:1 with Reference Image 2)*/}
-        {/* Cybernetic Frame + Center Flame Reactor + 4 Left & 3 Right Panels  */}
+        {/* 2. THE TACTICAL SAFETY WORKSTATION (NO LOUD BLUE FRAMES / NO BORDERS)*/}
+        {/* 4 Interactive Guide Cards + Center 3D Globe + 3 Photo Problem Cards */}
         {/* =================================================================== */}
-        <div className="relative w-full rounded-none overflow-hidden p-4 sm:p-8 bg-[#040814]/90 border border-[#00f0ff]/40 shadow-[0_0_50px_rgba(0,240,255,0.15)]">
-          {/* Cybernetic Tech Frame Accents (Image 2 style) */}
-          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#00f0ff] pointer-events-none" />
-          <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#00f0ff] pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#00f0ff] pointer-events-none" />
-          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#00f0ff] pointer-events-none" />
-
-          {/* Top Yellow Corner Dots (1:1 with Image 2) */}
-          <div className="absolute top-3 left-10 w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_#facc15] pointer-events-none" />
-          <div className="absolute top-3 right-10 w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_#facc15] pointer-events-none" />
-          <div className="absolute bottom-3 left-10 w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_#facc15] pointer-events-none" />
-          <div className="absolute bottom-3 right-10 w-2 h-2 rounded-full bg-yellow-400 shadow-[0_0_8px_#facc15] pointer-events-none" />
-
-          {/* Top Ventilation Louver Trim */}
-          <div className="w-full flex justify-center mb-6">
-            <div className="h-1.5 w-64 bg-gradient-to-r from-transparent via-[#00f0ff]/60 to-transparent" />
-          </div>
-
-          {/* Main Grid: 4 Left Boxes, Center Holographic Flame Reactor, 3 Right Boxes */}
+        <div className="relative w-full rounded-none p-4 sm:p-8 bg-black/40 border-y border-white/10 backdrop-blur-md">
+          
+          {/* Main Grid: 4 Left Interactive Cards, Center 3D Planet Globe, 3 Right Photo Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
 
             {/* =============================================================== */}
-            {/* LEFT COLUMN: 4 TACTICAL CREW SAFETY & HAZARD BOXES (Image 2)     */}
+            {/* LEFT COLUMN: 4 INTERACTIVE SAFETY & FIRE PREVENTION HANDBOOK SECTIONS */}
+            {/* Hover reveals the full rules, checklist, and critical directives */}
             {/* =============================================================== */}
             <div className="lg:col-span-4 space-y-3">
-              {/* Box 1: Crew Survival Actions */}
-              <div className="p-3.5 bg-black/60 border border-[#00f0ff]/30 relative rounded-none hover:border-[#00f0ff]/70 transition-all">
-                <div className="flex items-center gap-2 mb-1.5 font-mono text-[10px] text-[#00f0ff] tracking-wider uppercase">
-                  <ShieldAlert className="w-3.5 h-3.5" />
-                  <span>01 // CREW IMMEDIATE SURVIVAL ACTIONS</span>
-                </div>
-                <ul className="space-y-1 font-sans text-xs text-zinc-300 font-light leading-snug">
-                  {currentPlanet.crewSurvivalActions.map((action, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-cyan-400 mt-0.5">•</span>
-                      <span>{action}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
+                <span className="font-mono text-[10px] text-zinc-300 uppercase tracking-widest flex items-center gap-1.5">
+                  <ShieldAlert className="w-3.5 h-3.5 text-cyan-400" />
+                  SURVIVAL & FIRE GUIDE // {currentPlanet.name.split(' ')[0]}
+                </span>
+                <span className="font-mono text-[9px] text-zinc-500">
+                  HOVER FOR RULES
+                </span>
               </div>
 
-              {/* Box 2: Flame Combustion Mechanism */}
-              <div className="p-3.5 bg-black/60 border border-[#00f0ff]/30 relative rounded-none hover:border-[#00f0ff]/70 transition-all">
-                <div className="flex items-center gap-2 mb-1.5 font-mono text-[10px] text-amber-400 tracking-wider uppercase">
-                  <Flame className="w-3.5 h-3.5" />
-                  <span>02 // FLAME COMBUSTION MECHANISM ({currentPlanet.gravityG}g)</span>
-                </div>
-                <ul className="space-y-1 font-sans text-xs text-zinc-300 font-light leading-snug">
-                  {currentPlanet.flameCombustionMechanism.map((mech, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-amber-400 mt-0.5">•</span>
-                      <span>{mech}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {currentPlanet.safetyHandbook.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-3.5 bg-black/70 border border-white/10 rounded-none transition-all duration-300 group hover:border-cyan-400 hover:bg-black/95 cursor-pointer shadow-md"
+                >
+                  {/* Card Header in Default State */}
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-mono text-[9px] text-cyan-400 tracking-wider uppercase group-hover:text-cyan-300">
+                      {item.sectionTag}
+                    </span>
+                    <span className="font-mono text-[8px] px-1.5 py-0.5 bg-white/5 border border-white/10 text-zinc-400 group-hover:border-cyan-500/40 group-hover:text-cyan-300">
+                      {item.badge}
+                    </span>
+                  </div>
 
-              {/* Box 3: Toxic Gas & CO Threat */}
-              <div className="p-3.5 bg-black/60 border border-[#00f0ff]/30 relative rounded-none hover:border-[#00f0ff]/70 transition-all">
-                <div className="flex items-center gap-2 mb-1.5 font-mono text-[10px] text-red-400 tracking-wider uppercase">
-                  <AlertTriangle className="w-3.5 h-3.5" />
-                  <span>03 // TOXIC GASES & CO ACCUMULATION ({currentPlanet.coHazardPct}%)</span>
-                </div>
-                <ul className="space-y-1 font-sans text-xs text-zinc-300 font-light leading-snug">
-                  {currentPlanet.toxicGasAndCoThreat.map((gas, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-red-400 mt-0.5">•</span>
-                      <span>{gas}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                  {/* Title & Short Summary (Always Visible) */}
+                  <h4 className="font-sans text-xs font-medium text-white group-hover:text-cyan-200 transition-colors">
+                    {item.title}
+                  </h4>
+                  <p className="font-sans text-[11px] text-zinc-400 font-light mt-0.5 leading-snug">
+                    {item.shortSummary}
+                  </p>
 
-              {/* Box 4: Critical Material Hazards */}
-              <div className="p-3.5 bg-black/60 border border-[#00f0ff]/30 relative rounded-none hover:border-[#00f0ff]/70 transition-all">
-                <div className="flex items-center gap-2 mb-1.5 font-mono text-[10px] text-purple-400 tracking-wider uppercase">
-                  <Cpu className="w-3.5 h-3.5" />
-                  <span>04 // HIGH-RISK HABITAT MATERIALS</span>
+                  {/* Interactive Hover Indicator */}
+                  <div className="flex items-center gap-1.5 font-mono text-[8px] text-zinc-500 mt-2 group-hover:hidden">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400/60 animate-pulse" />
+                    <span>[ HOVER TO REVEAL MANDATORY RULES ]</span>
+                  </div>
+
+                  {/* Expanded Detailed Rules (Revealed smoothly on hover) */}
+                  <div className="max-h-0 opacity-0 group-hover:max-h-96 group-hover:opacity-100 transition-all duration-500 overflow-hidden pt-0 group-hover:pt-2.5 space-y-2 border-t border-transparent group-hover:border-white/10 mt-0 group-hover:mt-2">
+                    <div className="font-mono text-[9px] text-zinc-400 uppercase tracking-wider">
+                      MANDATORY ACTIONABLE CHECKLIST:
+                    </div>
+                    <ul className="space-y-1 font-sans text-[11px] text-zinc-200 font-light leading-snug">
+                      {item.rules.map((rule, rIdx) => (
+                        <li key={rIdx} className="flex items-start gap-1.5">
+                          <span className="text-cyan-400 font-mono text-[9px] mt-0.5">{rIdx + 1}.</span>
+                          <span>{rule}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="font-mono text-[9px] text-red-300 bg-red-950/40 border border-red-500/30 p-1.5 leading-tight">
+                      <span className="font-bold text-red-400">CRITICAL: </span>
+                      {item.criticalDirective}
+                    </div>
+                  </div>
                 </div>
-                <ul className="space-y-1 font-sans text-xs text-zinc-300 font-light leading-snug">
-                  {currentPlanet.criticalMaterialHazards.map((mat, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-purple-400 mt-0.5">•</span>
-                      <span>{mat}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              ))}
             </div>
 
             {/* =============================================================== */}
-            {/* CENTER COLUMN: ROTATING HOLOGRAPHIC FLAME REACTOR (Image 2)     */}
+            {/* CENTER COLUMN: 3D PHOTOREALISTIC PLANET COMMAND PEDESTAL       */}
+            {/* Smooth transfer animation from top lineup to card center        */}
             {/* =============================================================== */}
             <div className="lg:col-span-4 flex flex-col items-center justify-center my-4">
-              {/* Concentric Segmented Cybernetic Arc Ring (1:1 with Image 2) */}
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center">
+              <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center">
                 
-                {/* Outer Segmented White/Cyan Brackets Rotating (Image 2 style) */}
-                <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#00f0ff] border-r-white/80 border-b-[#00f0ff] animate-[spin_25s_linear_infinite]" />
-                <div className="absolute inset-4 rounded-full border border-dashed border-[#00f0ff]/50 animate-[spin_15s_linear_infinite_reverse]" />
-                <div className="absolute inset-8 rounded-full border-2 border-transparent border-l-white border-b-cyan-400 animate-[spin_35s_linear_infinite]" />
+                {/* Rotating Atmospheric Concentric Telemetry Ring */}
+                <div
+                  className="absolute inset-0 rounded-full border border-dashed animate-[spin_40s_linear_infinite] pointer-events-none"
+                  style={{ borderColor: `${currentPlanet.themeColor}50` }}
+                />
+                <div
+                  className="absolute inset-[-10px] rounded-full border border-white/10 pointer-events-none"
+                />
 
-                {/* Cybernetic Center HUD Simulation Core */}
-                <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-black/85 border border-[#00f0ff]/60 flex flex-col items-center justify-center relative overflow-hidden shadow-[inset_0_0_30px_rgba(0,240,255,0.4)]">
-                  
-                  {/* Real-Time Simulated Dynamic Flame for this Planet */}
-                  <div className="relative flex flex-col items-center justify-center">
-                    {currentPlanet.gravityG === 0 ? (
-                      /* Zero-G: Perfect Spherical Blue Diffusion Flame */
-                      <div className="relative flex items-center justify-center">
-                        <div
-                          className="w-16 h-16 rounded-full bg-gradient-to-tr from-blue-600 via-cyan-400 to-transparent blur-[1px] shadow-[0_0_30px_#00f0ff] animate-pulse"
-                        />
-                        <div className="absolute w-4 h-4 rounded-full bg-white blur-[2px] opacity-80" />
-                      </div>
-                    ) : currentPlanet.gravityG < 0.4 ? (
-                      /* Low-G (Moon / Mars): Low-buoyancy Dome Flame */
-                      <div className="relative flex flex-col items-center">
-                        <div
-                          className="w-14 h-18 rounded-t-full bg-gradient-to-t from-orange-600 via-amber-400 to-blue-400 blur-[1px] shadow-[0_0_35px_#f59e0b]"
-                        />
-                      </div>
-                    ) : (
-                      /* Hyper-G (Jupiter / 1g): Violent Turbulent Upward Plume */
-                      <div className="relative flex flex-col items-center">
-                        <div
-                          className="w-12 h-24 rounded-full bg-gradient-to-t from-blue-700 via-orange-500 to-yellow-200 blur-[1px] shadow-[0_0_40px_#ea580c] animate-[pulse_1s_infinite]"
-                        />
-                      </div>
-                    )}
+                {/* Crosshair coordinate ticks */}
+                <div className="absolute inset-[-14px] pointer-events-none">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-[1px] bg-white/60" />
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-[1px] bg-white/60" />
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 h-3 w-[1px] bg-white/60" />
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-[1px] bg-white/60" />
+                </div>
 
-                    {/* Flame Summary Label */}
-                    <div className="mt-2 text-center font-mono text-[9px] text-cyan-300 uppercase tracking-widest px-2">
-                      {currentPlanet.flameType}
-                    </div>
-                  </div>
+                {/* Atmospheric Corona Light Bloom hugging the planet */}
+                <div
+                  className="absolute top-2 left-1/2 -translate-x-1/2 w-48 h-12 rounded-full blur-[20px] pointer-events-none transition-all duration-700"
+                  style={{
+                    background: `radial-gradient(ellipse at center, #ffffff 20%, ${currentPlanet.themeColor} 70%, transparent 90%)`,
+                    opacity: 0.85,
+                  }}
+                />
 
-                  {/* Planet Telemetry Badges */}
-                  <div className="absolute bottom-2 flex items-center gap-2 font-mono text-[9px] text-zinc-400">
-                    <span>{currentPlanet.gravityG}g</span>
-                    <span>·</span>
-                    <span>{currentPlanet.oxygenPct}% O2</span>
-                  </div>
+                {/* Photorealistic 3D Planet Sphere (Animate smoothly when selected) */}
+                <div
+                  className={`relative w-48 h-48 sm:w-56 sm:h-56 rounded-full overflow-hidden shadow-2xl transition-all duration-700 ease-out ${
+                    isTransitioningPlanet ? 'scale-75 opacity-40 blur-[2px] -translate-y-6' : 'scale-100 opacity-100 blur-0 translate-y-0'
+                  }`}
+                  style={{
+                    boxShadow: `0 0 35px ${currentPlanet.themeColor}, 0 0 65px ${currentPlanet.themeGlow}`,
+                  }}
+                >
+                  <img
+                    src={currentPlanet.imageSrc}
+                    alt={currentPlanet.name}
+                    decoding="async"
+                    className="w-full h-full object-cover rounded-full select-none"
+                  />
+
+                  {/* Directional Day/Night Terminator */}
+                  <div
+                    className="absolute inset-0 rounded-full pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(135deg, transparent 55%, rgba(0, 0, 0, 0.4) 80%, rgba(0, 0, 0, 0.75) 100%)',
+                    }}
+                  />
+
+                  {/* Atmospheric Edge Limb Highlight */}
+                  <div
+                    className="absolute inset-0 rounded-full pointer-events-none"
+                    style={{
+                      boxShadow: `inset 0 0 16px ${currentPlanet.themeColor}, inset 0 2px 6px rgba(255,255,255,0.7)`,
+                    }}
+                  />
                 </div>
               </div>
 
-              {/* Status Header below Ring */}
-              <div className="mt-4 text-center">
-                <div className="font-mono text-[10px] text-cyan-400 uppercase tracking-[0.2em] font-medium">
-                  {currentPlanet.name} // COMBUSTION PROFILE
+              {/* Status Telemetry below Globe */}
+              <div className="mt-4 text-center space-y-1">
+                <div className="font-sans text-lg font-light text-white tracking-widest uppercase text-shadow-glow">
+                  {currentPlanet.name}
                 </div>
-                <div className="font-sans text-xs text-zinc-400 font-light mt-0.5">
-                  LOC Extinction Limit: <strong className="text-white">{currentPlanet.locThreshold}</strong> · Spread: <strong className="text-white">{currentPlanet.burnRateMmS} mm/s</strong>
+                <div className="font-mono text-xs text-cyan-400 font-light">
+                  GRAVITY: <strong className="text-white">{currentPlanet.gravityG}g</strong> · PRESSURE: <strong className="text-white">{currentPlanet.pressureKpa} kPa</strong>
+                </div>
+                <div className="font-mono text-[10px] text-zinc-400">
+                  FLAME: <span className="text-zinc-200">{currentPlanet.flameType}</span> · LOC: <span className="text-emerald-300">{currentPlanet.locThreshold}</span>
                 </div>
 
                 {/* Toggle Custom Sliders Button */}
                 <button
                   onClick={() => setShowCustomSliders(!showCustomSliders)}
-                  className="mt-3 px-4 py-1.5 border border-[#00f0ff]/40 bg-black/60 hover:bg-[#00f0ff]/10 text-cyan-300 font-mono text-[10px] uppercase tracking-wider transition-all flex items-center gap-1.5 mx-auto cursor-pointer"
+                  className="mt-3 px-4 py-1.5 border border-white/20 bg-black/60 hover:bg-white/10 text-cyan-300 font-mono text-[10px] uppercase tracking-wider transition-all flex items-center gap-1.5 mx-auto cursor-pointer"
                 >
                   <Sliders className="w-3 h-3" />
                   <span>{showCustomSliders ? 'HIDE CUSTOM CONTROLS' : 'OPEN INTERACTIVE SLIDERS'}</span>
@@ -851,7 +1084,7 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
             {/* RIGHT COLUMN: 3 ACTIONABLE FIRE HAZARD & PROBLEM CARDS WITH PHOTOS (1:1 with Image 2) */}
             {/* =============================================================== */}
             <div className="lg:col-span-4 space-y-3.5">
-              <div className="flex items-center justify-between pb-1.5 border-b border-[#00f0ff]/30">
+              <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
                 <span className="font-mono text-[10px] text-cyan-300 uppercase tracking-widest flex items-center gap-1.5">
                   <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
                   CRITICAL HABITAT HAZARDS // {currentPlanet.name.split(' ')[0]}
@@ -864,19 +1097,20 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
               {currentPlanet.hazardCards.map((hazard, hIdx) => (
                 <div
                   key={hIdx}
-                  className="bg-black/85 border border-[#00f0ff]/35 hover:border-[#00f0ff] transition-all duration-300 overflow-hidden group shadow-lg"
+                  className="bg-black/85 border border-white/10 hover:border-cyan-400 transition-all duration-300 overflow-hidden group shadow-lg"
                 >
                   {/* Problem Photo with Tech Grid & Scanline Overlay */}
-                  <div className="relative h-24 sm:h-28 w-full overflow-hidden border-b border-[#00f0ff]/25">
+                  <div className="relative h-24 sm:h-28 w-full overflow-hidden border-b border-white/10">
                     <img
                       src={hazard.image}
                       alt={hazard.title}
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-90 group-hover:brightness-100"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent pointer-events-none" />
                     
                     {/* Corner Tag */}
-                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/90 border border-[#00f0ff]/50 font-mono text-[9px] uppercase tracking-wider text-cyan-300 backdrop-blur-sm">
+                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/90 border border-white/20 font-mono text-[9px] uppercase tracking-wider text-cyan-300 backdrop-blur-sm">
                       {hazard.tag}
                     </div>
 
@@ -905,100 +1139,102 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
 
           </div>
 
-          {/* Bottom Ventilation Louver Trim */}
+          {/* Bottom Clean Divider */}
           <div className="w-full flex justify-center mt-6">
-            <div className="h-1.5 w-64 bg-gradient-to-r from-transparent via-[#00f0ff]/60 to-transparent" />
+            <div className="h-0.5 w-64 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           </div>
         </div>
 
         {/* =================================================================== */}
         {/* 3. OPTIONAL EXPANDABLE CUSTOM LAB SLIDERS DRAWER                    */}
-        {/* For deep interactive testing of Gravity, Oxygen, Pressure & Draft   */}
         {/* =================================================================== */}
         {showCustomSliders && (
-          <div className="p-6 bg-black/80 border border-[#00f0ff]/40 space-y-6 animate-in fade-in duration-300">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-cyan-400" />
-                <span className="font-mono text-xs uppercase tracking-[0.2em] text-white">
-                  CUSTOM LABORATORY PARAMETER EXPERIMENTATION
-                </span>
-              </div>
+          <div className="border border-white/10 bg-black/80 p-6 backdrop-blur-md animate-in fade-in duration-300 space-y-6">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <span className="font-mono text-xs uppercase tracking-widest text-cyan-400 flex items-center gap-2">
+                <Sliders className="w-4 h-4" />
+                CUSTOM VARIABLE EXPERIMENTAL BENCH // NASA CIR PROTOCOL
+              </span>
               <button
-                onClick={() => selectPlanet(selectedPlanetIndex)}
-                className="font-mono text-[10px] text-zinc-400 hover:text-white uppercase flex items-center gap-1 cursor-pointer"
+                onClick={() => {
+                  setCustomGravity(currentPlanet.gravityG);
+                  setCustomOxygen(currentPlanet.oxygenPct);
+                  setCustomPressure(currentPlanet.pressureKpa);
+                  setCustomAirflow(currentPlanet.airflowCmS);
+                }}
+                className="font-mono text-[10px] text-zinc-400 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <RotateCcw className="w-3 h-3" />
-                <span>RESET TO {currentPlanet.name.split(' ')[0]} DEFAULTS</span>
+                RESET TO {currentPlanet.name.split(' ')[0]} BASELINE
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 font-mono text-xs">
-              {/* Gravity */}
-              <div>
-                <div className="flex justify-between mb-1.5">
-                  <span className="text-zinc-400">GRAVITY:</span>
-                  <strong className="text-cyan-400">{customGravity.toFixed(3)}g</strong>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 font-mono text-xs">
+              {/* Gravity Slider */}
+              <div className="space-y-2 p-3 border border-white/5 bg-white/[0.02]">
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-400 text-[10px] uppercase">GRAVITATIONAL ACCEL</span>
+                  <span className="text-white font-medium">{customGravity.toFixed(3)} g</span>
                 </div>
                 <input
                   type="range"
-                  min="0"
-                  max="2.5"
+                  min="0.0"
+                  max="2.53"
                   step="0.01"
                   value={customGravity}
                   onChange={(e) => setCustomGravity(parseFloat(e.target.value))}
-                  className="w-full accent-cyan-400 bg-zinc-800 h-1 cursor-pointer"
+                  className="w-full accent-cyan-400 cursor-pointer"
                 />
               </div>
 
-              {/* Oxygen */}
-              <div>
-                <div className="flex justify-between mb-1.5">
-                  <span className="text-zinc-400">OXYGEN LEVEL:</span>
-                  <strong className="text-amber-400">{customOxygen.toFixed(1)}% O2</strong>
+              {/* Oxygen Slider */}
+              <div className="space-y-2 p-3 border border-white/5 bg-white/[0.02]">
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-400 text-[10px] uppercase">O2 CONCENTRATION</span>
+                  <span className="text-white font-medium">{customOxygen.toFixed(1)} %</span>
                 </div>
                 <input
                   type="range"
-                  min="10"
-                  max="35"
+                  min="10.0"
+                  max="35.0"
                   step="0.5"
                   value={customOxygen}
                   onChange={(e) => setCustomOxygen(parseFloat(e.target.value))}
-                  className="w-full accent-amber-400 bg-zinc-800 h-1 cursor-pointer"
+                  className="w-full accent-cyan-400 cursor-pointer"
                 />
               </div>
 
-              {/* Pressure */}
-              <div>
-                <div className="flex justify-between mb-1.5">
-                  <span className="text-zinc-400">CABIN PRESSURE:</span>
-                  <strong className="text-emerald-400">{customPressure.toFixed(1)} kPa</strong>
+              {/* Pressure Slider */}
+              <div className="space-y-2 p-3 border border-white/5 bg-white/[0.02]">
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-400 text-[10px] uppercase">HABITAT PRESSURE</span>
+                  <span className="text-white font-medium">{customPressure.toFixed(1)} kPa</span>
                 </div>
                 <input
                   type="range"
-                  min="40"
-                  max="150"
-                  step="1"
+                  min="30.0"
+                  max="150.0"
+                  step="1.0"
                   value={customPressure}
                   onChange={(e) => setCustomPressure(parseFloat(e.target.value))}
-                  className="w-full accent-emerald-400 bg-zinc-800 h-1 cursor-pointer"
+                  className="w-full accent-cyan-400 cursor-pointer"
                 />
               </div>
 
-              {/* Airflow */}
-              <div>
-                <div className="flex justify-between mb-1.5">
-                  <span className="text-zinc-400">VENTILATION DRAFT:</span>
-                  <strong className="text-blue-400">{customAirflow.toFixed(1)} cm/s</strong>
+              {/* Airflow Slider */}
+              <div className="space-y-2 p-3 border border-white/5 bg-white/[0.02]">
+                <div className="flex justify-between items-center">
+                  <span className="text-zinc-400 text-[10px] uppercase">HVAC FORCED AIRFLOW</span>
+                  <span className="text-white font-medium">{customAirflow.toFixed(1)} cm/s</span>
                 </div>
                 <input
                   type="range"
-                  min="0"
-                  max="30"
+                  min="0.0"
+                  max="30.0"
                   step="0.5"
                   value={customAirflow}
                   onChange={(e) => setCustomAirflow(parseFloat(e.target.value))}
-                  className="w-full accent-blue-400 bg-zinc-800 h-1 cursor-pointer"
+                  className="w-full accent-cyan-400 cursor-pointer"
                 />
               </div>
             </div>
