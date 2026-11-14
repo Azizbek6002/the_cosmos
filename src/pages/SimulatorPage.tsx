@@ -143,7 +143,7 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
       {
         tag: 'HAZARD 01 // CRYO-COOLANT LEAK',
         title: 'Glycol Heat Loop Autoignition Risk',
-        image: '/planets/planet_europa.png',
+        image: '/hazards/europa_ice.jpg',
         description: 'Vaporized glycol coolant under low pressure can ignite when contacting 200°C electronics heat sinks.',
         countermeasure: 'FIX: Instant scram of glycol pumps; discharge heated nitrogen purge across heat sink.',
         badge: 'GLYCOL FLASH: 68% HAZARD'
@@ -151,7 +151,7 @@ const PLANET_SAFETY_DATABASE: PlanetSafetyDossier[] = [
       {
         tag: 'HAZARD 02 // ICE WALL SUBLIMATION',
         title: 'Thermal Shock to Sub-Surface Ice Bulkhead',
-        image: '/planets/planet_europa.png',
+        image: '/planets/PIA00502.jpg',
         description: 'High heat flux from internal flames melts surrounding bedrock ice, threatening habitat seal integrity.',
         countermeasure: 'FIX: Engage active cryogenic heat pipes to dissipate thermal spike into surrounding ice sink.',
         badge: 'BULKHEAD CRITICAL: 190°C DELTA'
@@ -1049,10 +1049,10 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
         </div>
 
         {/* =================================================================== */}
-        {/* 2. THE TACTICAL SAFETY WORKSTATION (NO LOUD BLUE FRAMES / NO BORDERS)*/}
+        {/* 2. THE TACTICAL SAFETY WORKSTATION (NO BACKGROUND CARD / SEAMLESS)  */}
         {/* 4 Interactive Guide Cards + Center 3D Globe + 3 Photo Problem Cards */}
         {/* =================================================================== */}
-        <div className="relative w-full rounded-none p-4 sm:p-8 bg-black/40 border-y border-white/10 backdrop-blur-md">
+        <div className="relative w-full py-4">
           
           {/* Main Grid: 4 Left Interactive Cards, Center 3D Planet Globe, 3 Right Photo Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
@@ -1214,7 +1214,7 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
             </div>
 
             {/* =============================================================== */}
-            {/* RIGHT COLUMN: 3 ACTIONABLE FIRE HAZARD & PROBLEM CARDS WITH PHOTOS (1:1 with Image 2) */}
+            {/* RIGHT COLUMN: 3 ACTIONABLE FIRE HAZARD & PROBLEM CARDS WITH PHOTOS (Hover reveals info) */}
             {/* =============================================================== */}
             <div className="lg:col-span-4 space-y-3.5">
               <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
@@ -1223,58 +1223,64 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
                   CRITICAL HABITAT HAZARDS // {currentPlanet.name.split(' ')[0]}
                 </span>
                 <span className="font-mono text-[9px] text-zinc-400">
-                  3 ACTIVE THREATS
+                  HOVER TO REVEAL DETAILS
                 </span>
               </div>
 
               {currentPlanet.hazardCards.map((hazard, hIdx) => (
                 <div
                   key={hIdx}
-                  className="bg-black/85 border border-white/10 hover:border-cyan-400 transition-all duration-300 overflow-hidden group shadow-lg"
+                  className="relative h-32 sm:h-36 md:h-40 w-full border border-white/10 hover:border-cyan-400 transition-all duration-300 overflow-hidden group shadow-xl bg-black/40 cursor-pointer"
                 >
-                  {/* Problem Photo with Tech Grid & Scanline Overlay */}
-                  <div className="relative h-24 sm:h-28 w-full overflow-hidden border-b border-white/10">
-                    <img
-                      src={hazard.image}
-                      alt={hazard.title}
-                      decoding="async"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-90 group-hover:brightness-100"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent pointer-events-none" />
-                    
-                    {/* Corner Tag */}
-                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/90 border border-white/20 font-mono text-[9px] uppercase tracking-wider text-cyan-300 backdrop-blur-sm">
-                      {hazard.tag}
-                    </div>
+                  {/* Problem Photo: Seen completely, clearly, and prominently */}
+                  <img
+                    src={hazard.image}
+                    alt={hazard.title}
+                    decoding="async"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out brightness-95 group-hover:brightness-100 select-none"
+                  />
 
-                    {/* Critical Badge on bottom right of photo */}
-                    <div className="absolute bottom-1.5 right-2 px-1.5 py-0.5 bg-red-950/90 border border-red-500/50 font-mono text-[8px] text-red-300 tracking-wider">
-                      {hazard.badge}
-                    </div>
+                  {/* Faint subtle scanline & vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none group-hover:from-black/95 group-hover:via-black/60 transition-colors duration-300" />
+
+                  {/* Top Corner Minimal Threat Tag (always visible) */}
+                  <div className="absolute top-2 left-2 z-10 pointer-events-none">
+                    <span className="font-mono text-[8px] sm:text-[9px] px-2 py-0.5 bg-black/80 border border-white/20 text-cyan-300 backdrop-blur-md uppercase tracking-wider">
+                      {hazard.tag.split('//')[0].trim()}
+                    </span>
                   </div>
 
-                  {/* Problem Narrative & Actionable Countermeasure */}
-                  <div className="p-3 space-y-2">
-                    <h4 className="font-sans text-xs font-medium text-white tracking-wide group-hover:text-cyan-200 transition-colors">
+                  {/* Bottom Minimal Red Badge (always visible, fades on hover) */}
+                  <div className="absolute bottom-2 right-2 z-10 pointer-events-none group-hover:opacity-0 transition-opacity duration-200">
+                    <span className="px-1.5 py-0.5 bg-red-950/85 border border-red-500/50 font-mono text-[8px] text-red-300 tracking-wider">
+                      {hazard.badge}
+                    </span>
+                  </div>
+
+                  {/* Hover Overlay: Smoothly slides up revealing the brief title and countermeasure */}
+                  <div className="absolute inset-x-0 bottom-0 p-3 sm:p-3.5 bg-gradient-to-t from-black via-black/95 to-black/30 backdrop-blur-md border-t border-cyan-400/30 transform translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none space-y-1.5 z-20">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[9px] text-cyan-400 tracking-widest uppercase">
+                        {hazard.tag}
+                      </span>
+                      <span className="px-1.5 py-0.5 bg-red-950/90 border border-red-500/50 font-mono text-[8px] text-red-300 tracking-wider">
+                        {hazard.badge}
+                      </span>
+                    </div>
+
+                    <h4 className="font-sans text-xs sm:text-[13px] font-medium text-white tracking-wide leading-snug">
                       {hazard.title}
                     </h4>
-                    <p className="font-sans text-[11px] text-zinc-300 font-light leading-relaxed">
-                      {hazard.description}
-                    </p>
-                    <div className="font-mono text-[10px] text-emerald-400 bg-emerald-950/30 border border-emerald-500/30 px-2 py-1 flex items-start gap-1.5">
-                      <span className="text-zinc-400 font-medium">FIX:</span>
-                      <span className="text-emerald-300">{hazard.countermeasure}</span>
+
+                    <div className="font-mono text-[9px] text-emerald-300 bg-emerald-950/40 border border-emerald-500/30 px-2 py-0.5 flex items-center gap-1.5">
+                      <span className="text-zinc-400 font-semibold">ACTION:</span>
+                      <span className="truncate">{hazard.countermeasure.replace('FIX: ', '')}</span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
 
-          </div>
-
-          {/* Bottom Clean Divider */}
-          <div className="w-full flex justify-center mt-6">
-            <div className="h-0.5 w-64 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           </div>
         </div>
 
