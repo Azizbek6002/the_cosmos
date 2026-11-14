@@ -438,48 +438,64 @@ export const SimulatorPage: React.FC<SimulatorPageProps> = ({ onNavigate: _onNav
                   key={planet.id}
                   onClick={() => selectPlanet(idx)}
                   className={`group relative flex flex-col items-center flex-shrink-0 cursor-pointer transition-all duration-300 ${
-                    isSelected ? 'scale-115 z-30' : 'opacity-60 hover:opacity-100 scale-95'
+                    isSelected ? 'scale-110 z-30' : 'opacity-60 hover:opacity-100 scale-95'
                   }`}
                 >
-                  {/* Selected Planet HUD Orbit Rings (Image 1 style) */}
-                  {isSelected && (
-                    <div className="absolute inset-[-16px] pointer-events-none flex items-center justify-center">
-                      <div
-                        className="absolute inset-0 rounded-full border border-dashed animate-[spin_20s_linear_infinite]"
-                        style={{ borderColor: `${planet.themeColor}` }}
+                  {/* Dedicated 1:1 Aspect-Ratio Planet Container with Perfect Concentric Orbits */}
+                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+                    
+                    {/* Selected Planet HUD Orbit Rings (Centered with Pinpoint Mathematical Precision) */}
+                    {isSelected && (
+                      <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+                        {/* 1. Outer Solid Crisp White Orbit Ring (Perfect Circle, Centered on Sphere) */}
+                        <div
+                          className="absolute w-24 h-24 sm:w-28 sm:h-28 rounded-full border border-white/60 pointer-events-none transition-all duration-500 shadow-[0_0_12px_rgba(255,255,255,0.25)]"
+                          style={{
+                            boxShadow: `0 0 15px ${planet.themeColor}40`,
+                          }}
+                        />
+
+                        {/* 2. Inner Dashed Technical Reticle White Orbit Ring (Slow, Smooth Rotation, Perfect Circle) */}
+                        <div
+                          className="absolute w-[86px] h-[86px] sm:w-[102px] sm:h-[102px] rounded-full border border-dashed border-white/75 animate-[spin_35s_linear_infinite] pointer-events-none"
+                        />
+
+                        {/* 4 Precision HUD Crosshair Reticle Markers */}
+                        <div className="absolute w-[94px] h-[94px] sm:w-[110px] sm:h-[110px] pointer-events-none">
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-[1px] bg-white/80" />
+                          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-[1px] bg-white/80" />
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-2 w-[1px] bg-white/80" />
+                          <div className="absolute right-0 top-1/2 -translate-y-1/2 h-2 w-[1px] bg-white/80" />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Planet 3D Sphere */}
+                    <div
+                      className="w-full h-full rounded-full relative overflow-hidden shadow-2xl transition-all"
+                      style={{
+                        boxShadow: isSelected
+                          ? `0 0 35px ${planet.themeGlow}, inset 0 2px 8px rgba(255,255,255,0.8)`
+                          : `inset 0 0 10px rgba(0,0,0,0.8)`,
+                      }}
+                    >
+                      <img
+                        src={planet.imageSrc}
+                        alt={planet.name}
+                        className="w-full h-full object-cover rounded-full select-none"
                       />
                       <div
-                        className="absolute inset-[-8px] rounded-full border opacity-40 rotate-45"
-                        style={{ borderColor: `${planet.themeColor}` }}
+                        className="absolute inset-0 rounded-full pointer-events-none"
+                        style={{
+                          background: 'linear-gradient(135deg, transparent 55%, rgba(0, 0, 0, 0.35) 80%, rgba(0, 0, 0, 0.75) 100%)',
+                        }}
                       />
                     </div>
-                  )}
-
-                  {/* Planet 3D Sphere */}
-                  <div
-                    className="w-16 h-16 sm:w-20 sm:h-20 rounded-full relative overflow-hidden shadow-2xl transition-all"
-                    style={{
-                      boxShadow: isSelected
-                        ? `0 0 35px ${planet.themeGlow}, inset 0 2px 8px rgba(255,255,255,0.8)`
-                        : `inset 0 0 10px rgba(0,0,0,0.8)`,
-                    }}
-                  >
-                    <img
-                      src={planet.imageSrc}
-                      alt={planet.name}
-                      className="w-full h-full object-cover rounded-full select-none"
-                    />
-                    <div
-                      className="absolute inset-0 rounded-full pointer-events-none"
-                      style={{
-                        background: 'linear-gradient(135deg, transparent 55%, rgba(0, 0, 0, 0.35) 80%, rgba(0, 0, 0, 0.75) 100%)',
-                      }}
-                    />
                   </div>
 
-                  {/* Planet Label */}
+                  {/* Planet Label (Positioned cleanly below orbit rings with comfortable margin) */}
                   <span
-                    className={`font-mono text-[9px] uppercase tracking-wider mt-2.5 transition-colors text-shadow-dark ${
+                    className={`font-mono text-[9px] uppercase tracking-wider mt-4 transition-colors text-shadow-dark ${
                       isSelected ? 'text-white font-medium' : 'text-zinc-400 group-hover:text-white'
                     }`}
                     style={{ color: isSelected ? planet.themeColor : undefined }}
